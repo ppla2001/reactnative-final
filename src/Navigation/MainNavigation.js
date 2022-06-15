@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../screens/Login/Login";
 import Register from "../screens/Register/Register";
 import TabNavigation from "./TabNavigation";
-import { auth } from "../firebase/config";
+import { auth, db } from "../firebase/config";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,6 +13,8 @@ export default class MainNavigation extends Component {
     super(props);
     this.state = {
       Logged: false,
+      errorMessageRegister: "",
+      errorMessageLogin: "",
     };
   }
 
@@ -28,14 +30,25 @@ export default class MainNavigation extends Component {
     auth
       .signInWithEmailAndPassword(email, password)
       .then((response) => this.setState({ Logged: true }))
-      .catch((e) => console.log(e));
+      .catch((e) => this.setState({ errorMessageLogin: e.message }));
+    // Falta avisar al usuario si hay error
   }
-
-  register(email, password) {
+  register(email, password, username) {
     auth
       .createUserWithEmailAndPassword(email, password)
+      .then(() =>
+        db
+          .collection("users")
+          .add({
+            owner: email,
+            name: username,
+            createdAt: Date.now(),
+          })
+          .catch((e) => console.log(e))
+      )
       .then((response) => this.setState({ Logged: true }))
-      .catch((e) => console.log(e));
+      .catch((e) => this.setState({ errorMessageRegister: e.message }));
+    // Falta avisar al usuario si hay error
   }
 
   logout() {
@@ -62,16 +75,27 @@ export default class MainNavigation extends Component {
             <Stack.Group>
               <Stack.Screen
                 name="Login"
-                component={Login}
-                options={{ headerShown: false }}
-                initialParams={{
-                  login: (email, password) => this.login(email, password),
-                }}
+                children={(props) => (
+                  <Login
+                    login={(email, password) => this.login(email, password)}
+                    errorMessageLogin={this.state.errorMessageLogin}
+                    {...props}
+                  ></Login>
+                )}
               ></Stack.Screen>
+
               <Stack.Screen
                 name="Register"
-                component={Register}
-                options={{ headerShown: false }}
+                children={(props) => (
+                  <Register
+                    register={(email, password, username) =>
+                      this.register(email, password, username)
+                    }
+                    errorMessageRegister={this.state.errorMessageRegister}
+                    {...props}
+                  ></Register>
+                )}
+                // options={{ headerShown: false }}
                 initialParams={{
                   register: (email, password) => this.register(email, password),
                 }}

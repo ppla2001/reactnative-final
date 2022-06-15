@@ -18,13 +18,15 @@ export default class Register extends Component {
   }
 
   render() {
+    console.log(this.props.errorMessageRegister);
     return (
       <View style={styles.constainer}>
-        <Text> Register </Text>
+        <Text style={styles.mainTxt}> Register </Text>
+
         <TextInput
           style={styles.textField}
           keyboardType="default"
-          placeholder="Username"
+          placeholder="username"
           onChangeText={(text) => this.setState({ username: text })}
         ></TextInput>
         <TextInput
@@ -43,9 +45,10 @@ export default class Register extends Component {
         <TouchableOpacity
           style={styles.btn}
           onPress={() =>
-            this.props.route.params.register(
+            this.props.register(
               this.state.email,
-              this.state.password
+              this.state.password,
+              this.state.username
             )
           }
         >
@@ -54,7 +57,7 @@ export default class Register extends Component {
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate("Login")}
         >
-          <Text> Iniciar sesion</Text>
+          <Text style={styles.ultTxt}> Ya tengo cuenta, Iniciar sesion</Text>
         </TouchableOpacity>
       </View>
     );
@@ -63,18 +66,33 @@ export default class Register extends Component {
 
 const styles = StyleSheet.create({
   constainer: {
+    // flex: 1,
+    // flexDirection: "column",
     paddingHorizontal: 10,
+    marginTop: 10,
+    justifyContent: "center",
+  },
+  mainTxt: {
+    flex: 1,
+    textAlign: "center",
+    fontSize: 24,
+    fontWeight: "bold",
     marginTop: 20,
   },
   textField: {
     height: 20,
+    width: "90%",
     paddingVertical: 15,
     paddingHorizontal: 10,
     borderRadius: 6,
     borderColor: "#ccc",
     borderStyle: "solid",
     borderWidth: 1,
-    marginVertical: 10,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 10,
+    marginBottom: 10,
+    flex: 1,
   },
   btn: {
     backgroundColor: "#28a745",
@@ -85,8 +103,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: "#28a745",
+    flex: 1,
+    width: "90%",
+    height: 20,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 10,
+    marginBottom: 10,
   },
   btnTxt: {
-    color: "#fff",
+    color: "#ffff",
+    fontSize: 17,
+    paddingBottom: 10,
+    fontWeight: "bold",
+  },
+  ultTxt: {
+    flex: 1,
+    marginLeft: "auto",
+    marginRight: "auto",
+    fontSize: 15,
+    color: "#00008b",
   },
 });
