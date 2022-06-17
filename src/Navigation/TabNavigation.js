@@ -10,7 +10,7 @@ import Search from "../screens/Search/Search";
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigation(props) {
-  console.log(props);
+  console.log("ESTAS SON LAS PROPS DEL TABNAVIGATOR",props);
   return (
     <Tab.Navigator screenOptions={{ tabBarShowLabel: false }}>
       <Tab.Screen

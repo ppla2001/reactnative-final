@@ -19,9 +19,16 @@ export default class MainNavigation extends Component {
   }
 
   componentDidMount() {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.setState({ Logged: true });
+    auth.onAuthStateChanged((data) => {
+      console.log("ESTA ES LA METADATA DEL USER", auth.currentUser.metadata);
+      if (data) {
+        db.collection('users').doc(data.uid).onSnapshot(doc => {
+          console.log("ESTE ES EL DOC QUE LLEGA EN SNAPSHOT", doc.data());
+          this.setState({
+            user: doc.data()
+          })
+      })
+        this.setState({ Logged: true,});
       }
     });
   }
@@ -29,23 +36,25 @@ export default class MainNavigation extends Component {
   login(email, password) {
     auth
       .signInWithEmailAndPassword(email, password)
-      .then((response) => this.setState({ Logged: true }))
+      .then((response) => {
+        this.setState({ Logged: true })
+      })
       .catch((e) => this.setState({ errorMessageLogin: e.message }));
     // Falta avisar al usuario si hay error
   }
+
   register(email, password, username) {
     auth
       .createUserWithEmailAndPassword(email, password)
-      .then(() =>
-        db
-          .collection("users")
-          .add({
+      .then((data) => {
+        db.collection("users").doc(data.user.uid).set({
             owner: email,
-            name: username,
+            username: username,
+            uid: data.user.uid,
             createdAt: Date.now(),
           })
-          .catch((e) => console.log(e))
-      )
+          .catch((e) => console.error(e))
+        })
       .then((response) => this.setState({ Logged: true }))
       .catch((e) => this.setState({ errorMessageRegister: e.message }));
     // Falta avisar al usuario si hay error
