@@ -87,9 +87,10 @@ class Post extends Component {
             <>
                 <View style={styles.post}>
                     <View style={styles.user}>
-                        <Text style={styles.username}>{this.state.user ? this.state.user.username : post.owner}</Text>
+                        <Text style={styles.username}>{post.owner}</Text>
                     </View>
-                    <Image style={styles.postImage} source={{uri:post.image}} resaizeMode='cover'/>
+                    <Image style={styles.postImage} source={{uri:post.url}} resaizeMode='cover'/>
+                    <Text style={styles.username}>{post.description}</Text>
                     <View style={styles.postContent}>
                         <View style={styles.reactionWrapper}>
                         {
@@ -109,7 +110,7 @@ class Post extends Component {
                         </TouchableOpacity>
                         </View>
                         <Text style={styles.likes}>{this.state.cantLikes} likes</Text>
-                        <Text style={styles.postTime}>{this.state.cantLikes} likes</Text>
+                        <Text style={styles.postTime}>{post.createdAt} </Text>
                     </View>
                     <View style={styles.commentWrapper}>
                         <FontAwesome style={styles.icon} name='smile-o' size={24} color='gray' />

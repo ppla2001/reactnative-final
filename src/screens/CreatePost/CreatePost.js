@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import {auth, db} from '../../firebase/config';
 import MyCamera from '../../components/MyCamera/MyCamera';
+import moment from 'moment';
 
 class NewPost extends Component{
     constructor(props){
