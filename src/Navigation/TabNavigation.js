@@ -26,7 +26,7 @@ export default function TabNavigation(props) {
         component={CreatePost}
         options={{
           tabBarIcon: () => (
-            <Ionicons name="plus" size={30} color="black" />
+            <Ionicons name="camera" size={30} color="black" />
           ),
         }}
       />

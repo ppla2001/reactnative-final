@@ -59,7 +59,7 @@ class Post extends Component {
         .then(response => {
             this.setState({
                 likeByUser:true,
-                cantLikes: this.state.cantLikes + 1
+                cantLikes: this.props.info.data.likes.length
             })
         })
         .catch(error=> console.log(error))
@@ -70,10 +70,10 @@ class Post extends Component {
         db.collection('posts').doc(post.id).update({
             likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
         })
-        .then(
+        .then( response =>
             this.setState({
                 likeByUser:false,
-                cantLikes: this.state.cantLikes - 1
+                cantLikes: this.props.info.data.likes.length
             })
         )
         .catch(error=> console.log(error))
@@ -105,25 +105,14 @@ class Post extends Component {
                             </TouchableOpacity>
 
                         }
-                        <TouchableOpacity onPress={()=> this.like()}>
+                        <TouchableOpacity onPress={()=> this.props.navigation.navigate('Comments', {id:this.props.info.id})}>
                             <FontAwesome style={styles.iconHeart} name='comment-o' size={24} color='black' /> 
                         </TouchableOpacity>
                         </View>
                         <Text style={styles.likes}>{this.state.cantLikes} likes</Text>
                         <Text style={styles.postTime}>{post.createdAt} </Text>
                     </View>
-                    <View style={styles.commentWrapper}>
-                        <FontAwesome style={styles.icon} name='smile-o' size={24} color='gray' />
-                        <TextInput 
-                            style={styles.commentBox}
-                            keyboardType='default'
-                            placeholder='Agregar un comentario'
-                            onChangeText={text => this.setState({ email: text})}
-                        />
-                        <TouchableOpacity >
-                          <Text style={styles.commentBtn}> Enviar</Text>
-                        </TouchableOpacity>
-                    </View>
+                   
                     {/* <View style={styles.containerLike}>
                         {
                             this.state.likeByUser

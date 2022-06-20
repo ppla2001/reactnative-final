@@ -5,6 +5,7 @@ import Login from "../screens/Login/Login";
 import Register from "../screens/Register/Register";
 import TabNavigation from "./TabNavigation";
 import { auth, db } from "../firebase/config";
+import Comments from "../screens/Comments/Comments";
 
 const Stack = createNativeStackNavigator();
 
@@ -72,7 +73,8 @@ export default class MainNavigation extends Component {
       <NavigationContainer>
         <Stack.Navigator>
           {this.state.Logged ? (
-            <Stack.Screen
+            <Stack.Group>
+               <Stack.Screen
               name="TabNavigation"
               component={TabNavigation}
               options={{ headerShown: false }}
@@ -80,6 +82,11 @@ export default class MainNavigation extends Component {
                 logout: (email, password) => this.logout(email, password),
               }}
             ></Stack.Screen>
+          <Stack.Screen name="Comments" component={Comments}>
+
+          </Stack.Screen>
+            </Stack.Group>
+           
           ) : (
             <Stack.Group>
               <Stack.Screen
