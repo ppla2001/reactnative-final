@@ -40,11 +40,9 @@ class Post extends Component {
     }
 
     getUser() {
-        console.log("ESTE ES EL USER OWNER DEL POST", this.props.info.data.owner);
         db.collection('users').where('owner', '==', this.props.info.data.owner).onSnapshot(users => {
             let user
             users.forEach(us => {
-                console.log("ESTE ES EL USER OWNER DEL POST", us.data());
                 user = us.data()
             })
             this.setState({
@@ -95,7 +93,16 @@ class Post extends Component {
             <>
                 <View style={styles.post}>
                     <View style={styles.user}>
-                        <Text style={styles.username}>{this.state.user ? this.state.user.name : post.owner}</Text>
+                        <Text style={styles.username}>{this.state.user ? this.state.user.username : post.owner}</Text>
+                        {
+                            post.owner == auth.currentUser.email
+                            ?
+                            <TouchableOpacity onPress={() => this.props.deletePost(this.props.info.id)}>
+                                <FontAwesome style={styles.iconHeart} name='trash-o' size={24} color='red' />
+                            </TouchableOpacity>
+                            :
+                            <View></View>
+                        }
                     </View>
 
                     <DoubleClick doubleTap={() => {this.like()}} delay={200}>
@@ -125,7 +132,7 @@ class Post extends Component {
                         </View>
 
                         <Text style={styles.likes}>{this.state.cantLikes} Me gusta</Text>
-                        <Text><Text style={styles.username}>{this.state.user ? this.state.user.name : post.owner}</Text> {post.description}</Text>
+                        <Text><Text style={styles.username}>{this.state.user ? this.state.user.username : post.owner}</Text> {post.description}</Text>
                         
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Comments', { id: this.props.info.id })}>
                             <Text style={styles.comments}>{post.comments.length >= 2 ? 'Ver los ' + post.comments.length + ' comentarios' : post.comments.length == 1 ? 'Ver un comentario' : 'Dejar el primer comentario'}</Text>
@@ -153,10 +160,12 @@ const styles = StyleSheet.create({
         marginBottom: '40px',
     },
     user: {
-        width: '100%',
         height: '40px',
-        padding: '0px 20px',
-        justifyContent: 'space-around',
+        width: '100%',
+        flex: 1,
+        flexDirection: 'row',
+        paddingHorizontal: '16px',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
     username: {

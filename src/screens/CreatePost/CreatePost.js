@@ -28,7 +28,7 @@ class NewPost extends Component{
                 description: this.state.description,
                 likes:[],
                 comments:[],
-                url: this.state.url
+                url: this.state.url,
             })
             .then( response => this.setState({
                 description:'',
@@ -50,7 +50,7 @@ class NewPost extends Component{
             <View style={styles.container}>
             {
                 this.state.showCamera ?
-                    <MyCamera onImageUpload={url => this.onImageUpload(url)}/> 
+                    <MyCamera onImageUpload={(url) => this.onImageUpload(url)}/> 
                 :
                 <View style={styles.container}>
                     <Text style={styles.title}>Nuevo Post</Text>

@@ -27,12 +27,23 @@ class Home extends Component {
             })
           }
         )
+        console.log("ESTOS SON LOS POSTS", posts);
         this.setState({
           posts:posts,
           loading:false
         })
       }
     )
+  }
+  
+  deletePost(id) {
+    console.log("BORRAMOS EL POST", id);
+    db.collection('posts').doc(id).delete().then((data) => {
+      resolve(data);
+    }, error => {
+      console.log("error", error);
+      reject(error);
+    })
   }
 
   render(){
@@ -42,11 +53,7 @@ class Home extends Component {
          this.state.loading ?
          <ActivityIndicator size={32} color='red'/>
          : 
-         <FlatList
-         data={this.state.posts}
-         keyExtractor={item => item.id.toString()}
-         renderItem={({ item }) => <Post info={item} navigation={this.props.navigation} />}
-         />
+         <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item} navigation={this.props.navigation} deletePost={(id) => this.deletePost(id)} /> } />
          }
       </View>
     )
