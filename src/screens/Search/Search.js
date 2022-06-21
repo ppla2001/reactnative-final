@@ -43,6 +43,10 @@ class Search extends Component {
       });
   }
 
+  isProfileFocus() {
+    return false
+  }
+
   render() {
     // console.log(this.state);
     return (
@@ -72,7 +76,7 @@ class Search extends Component {
             <FlatList
               data={this.state.posts}
               keyExtractor={(post) => post.id}
-              renderItem={({ item }) => <Post info={item} {...this.props} />}
+              renderItem={({ item }) => <Post info={item} {...this.props} isProfileFocus={() => this.isProfileFocus()}/>}
             />
           )
         ) : null}

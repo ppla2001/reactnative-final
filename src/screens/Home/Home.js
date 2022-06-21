@@ -51,7 +51,7 @@ class Home extends Component {
          this.state.loading ?
          <ActivityIndicator size={32} color='red'/>
          : 
-         <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item} isHomeFocus={this.props.navigation.isFocused} isProfileFocus={() => this.isProfileFocus()} deletePost={(id) => this.deletePost(id)} navigation={this.props.navigation} /> } />
+         <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item} isProfileFocus={() => this.isProfileFocus()} deletePost={(id) => this.deletePost(id)} navigation={this.props.navigation} /> } />
          }
       </View>
     )

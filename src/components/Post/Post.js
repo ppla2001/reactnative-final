@@ -22,7 +22,6 @@ class Post extends Component {
     }
 
     componentDidMount() {
-        console.log("ISHOMEFOCUS", this.props.isHomeFocus());
         let post = this.props.info.data
         const likeByUser = post.likes.includes(auth.currentUser.email)
 

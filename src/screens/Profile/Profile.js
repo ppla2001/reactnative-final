@@ -91,10 +91,6 @@ class Profile extends Component {
     });
   }
 
-  isHomeFocus() {
-    return false
-  }
-
   render() {
       return (
           <>
@@ -116,7 +112,7 @@ class Profile extends Component {
                     <Text style={styles.logout}>Cerrar Sesión</Text>
                   </TouchableOpacity>
                   
-                  <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item}  isHomeFocus={() => this.isHomeFocus()} isProfileFocus={this.props.navigation.isFocused} deletePost={(id) => this.deletePost(id)}/>} />
+                  <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item}  isProfileFocus={this.props.navigation.isFocused} deletePost={(id) => this.deletePost(id)}/>} />
 
                 </ScrollView>
               </View>
