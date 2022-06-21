@@ -46,7 +46,7 @@ class Profile extends Component {
     
   getUserPosts(){
     this.setState({postsLoaded: false})
-    db.collection('posts').where('owner', '==', auth.currentUser.email).onSnapshot(
+    db.collection('posts').where('owner', '==', auth.currentUser.email).orderBy('createdAt', 'desc').onSnapshot(
       (docs)=>{
         let posts = []
         docs.forEach(
