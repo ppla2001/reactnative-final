@@ -17,6 +17,7 @@ class Post extends Component {
             likeByUser: false,
             coments: [],
             showHeart: false,
+            showBrokenHeart: false,
         }
     }
 
@@ -75,17 +76,17 @@ class Post extends Component {
     }
 
     unlike() {
+        this.setState({showBrokenHeart: true})
+        setTimeout(() => {this.setState({showBrokenHeart: false})}, 1000)
         const post = this.props.info
         db.collection('posts').doc(post.id).update({
             likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
-        })
-            .then(response =>
-                this.setState({
-                    likeByUser: false,
-                    cantLikes: this.props.info.data.likes.length
-                })
-            )
-            .catch(error => console.log(error))
+        }).then(response =>
+            this.setState({
+                likeByUser: false,
+                cantLikes: this.props.info.data.likes.length
+            })
+        ).catch(error => console.log(error))
     }
 
 
@@ -112,6 +113,7 @@ class Post extends Component {
                         <View>
                             <Image style={styles.postImage} source={{ uri: post.url }} resaizeMode='cover' />
                             {this.state.showHeart ? <Image style={styles.overlay} source={require('../../../assets/heart.png')} resaizeMode='cover' /> : null}
+                            {this.state.showBrokenHeart ? <Image style={styles.overlay} source={require('../../../assets/brokenheart.png')} resaizeMode='cover' /> : null}
                         </View>
                     </DoubleClick>
                     <View style={styles.postContent}>

@@ -110,11 +110,11 @@ class Profile extends Component {
                     <Text>{auth.currentUser.email}</Text>
                     <Text>Ultimo inicio de sesión: {this.state.lastLogin}</Text>
                     <Text>Mis posteos: <Text style={styles.postsNum}>{this.state.posts.length}</Text></Text>
-                    <TouchableOpacity onPress={() => this.props.route.params.logout()}>
-                    </TouchableOpacity>
                   </View>
                   
-                  <Text style={styles.logout}>Cerrar Sesión</Text>
+                  <TouchableOpacity onPress={() => this.props.route.params.logout()}>
+                    <Text style={styles.logout}>Cerrar Sesión</Text>
+                  </TouchableOpacity>
                   
                   <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item}  isHomeFocus={() => this.isHomeFocus()} isProfileFocus={this.props.navigation.isFocused} deletePost={(id) => this.deletePost(id)}/>} />
 
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     margin: '10px',
     borderRadius: '20px',
     color: 'red',
+    textAlign: 'center',
   },
   postsNum: {
     fontWeight: 'bold',

@@ -38,12 +38,6 @@ class Home extends Component {
   
   deletePost(id) {
     console.log("BORRAMOS EL POST", id);
-    db.collection('posts').doc(id).delete().then((data) => {
-      resolve(data);
-    }, error => {
-      console.log("error", error);
-      reject(error);
-    })
   }
 
   isProfileFocus() {
@@ -57,7 +51,7 @@ class Home extends Component {
          this.state.loading ?
          <ActivityIndicator size={32} color='red'/>
          : 
-         <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item} isHomeFocus={this.props.navigation.isFocused} isProfileFocus={() => this.isProfileFocus()} deletePost={(id) => this.deletePost(id)} /> } />
+         <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item} isHomeFocus={this.props.navigation.isFocused} isProfileFocus={() => this.isProfileFocus()} deletePost={(id) => this.deletePost(id)} navigation={this.props.navigation} /> } />
          }
       </View>
     )

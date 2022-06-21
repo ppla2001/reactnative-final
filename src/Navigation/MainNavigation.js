@@ -6,6 +6,7 @@ import Register from "../screens/Register/Register";
 import TabNavigation from "./TabNavigation";
 import { auth, db } from "../firebase/config";
 import Comments from "../screens/Comments/Comments";
+import swal from 'sweetalert';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,10 +63,19 @@ export default class MainNavigation extends Component {
   }
 
   logout() {
-    auth
-      .signOut()
-      .then((response) => this.setState({ Logged: false }))
-      .catch((e) => console.log(e));
+    console.log("CERRAR SESION");
+    swal({
+      title: "Cerrar sesión?",
+      text: "Tendrás que volver a iniciar sesión para usar tu perfil",
+      icon: "warning",
+      buttons: ["Cancelar", "Cerrar Sesión"],
+      dangerMode: true,
+    })
+    .then((logout) => {
+      if (logout) {
+        auth.signOut().then((response) => this.setState({ Logged: false })).catch((e) => console.log(e));
+      }
+    });
   }
 
   render() {
