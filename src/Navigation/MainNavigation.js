@@ -24,7 +24,7 @@ export default class MainNavigation extends Component {
       console.log("ESTA ES LA METADATA DEL USER", auth.currentUser.metadata);
       if (data) {
         db.collection('users').doc(data.uid).onSnapshot(doc => {
-          console.log("ESTE ES EL DOC QUE LLEGA EN SNAPSHOT", doc.data());
+          console.log("ESTE ES EL USER QUE LLEGA EN SNAPSHOT", doc.data());
           this.setState({
             user: doc.data()
           })
