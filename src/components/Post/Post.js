@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 import firebase from 'firebase'
 import { auth, db } from '../../firebase/config'
+import swal from 'sweetalert';
 
 
 
@@ -20,6 +21,7 @@ class Post extends Component {
     }
 
     componentDidMount() {
+        console.log("ISHOMEFOCUS", this.props.isHomeFocus());
         let post = this.props.info.data
         const likeByUser = post.likes.includes(auth.currentUser.email)
 
@@ -94,8 +96,9 @@ class Post extends Component {
                 <View style={styles.post}>
                     <View style={styles.user}>
                         <Text style={styles.username}>{this.state.user ? this.state.user.username : post.owner}</Text>
+
                         {
-                            post.owner == auth.currentUser.email
+                            post.owner == auth.currentUser.email && this.props.isProfileFocus()
                             ?
                             <TouchableOpacity onPress={() => this.props.deletePost(this.props.info.id)}>
                                 <FontAwesome style={styles.iconHeart} name='trash-o' size={24} color='red' />
@@ -162,7 +165,7 @@ const styles = StyleSheet.create({
     user: {
         height: '40px',
         width: '100%',
-        flex: 1,
+        // flex: 1,
         flexDirection: 'row',
         paddingHorizontal: '16px',
         justifyContent: 'space-between',

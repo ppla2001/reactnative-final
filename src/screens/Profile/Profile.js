@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import React, { Component } from 'react'
 import { auth, db } from '../../firebase/config'
 import Post from '../../components/Post/Post'
@@ -13,6 +13,8 @@ class Profile extends Component {
         lastLogin: '',
         posts: [],
         loading: true,
+        profileLoaded: false,
+        postsLoaded: false,
       }
   }
 
@@ -21,8 +23,9 @@ class Profile extends Component {
     this.getUserPosts()
   }
 
+
   getUser() {
-    this.setState({loading: true})
+    this.setState({profileLoaded: false})
     let userLastLogin = new Date(auth.currentUser.metadata.lastSignInTime).toString().split('GMT')[0]
     db.collection('users').where('owner', '==', auth.currentUser.email).onSnapshot(users => {
       let user
@@ -33,13 +36,16 @@ class Profile extends Component {
       this.setState({
           user: user,
           lastLogin: userLastLogin,
-          loading: false
+          profileLoaded: true,
       })
+      if (this.state.profileLoaded && this.state.postsLoaded) {
+        this.setState({loading: false})
+      }
     });
   }
     
   getUserPosts(){
-    this.setState({loading: true})
+    this.setState({postsLoaded: false})
     db.collection('posts').where('owner', '==', auth.currentUser.email).onSnapshot(
       (docs)=>{
         let posts = []
@@ -55,20 +61,38 @@ class Profile extends Component {
         )
         this.setState({
           posts: posts,
-          loading: false
+          postsLoaded: true
         })
+        if (this.state.profileLoaded && this.state.postsLoaded) {
+          this.setState({loading: false})
+        }
       }
     )
   }
 
   deletePost(id) {
-    console.log("BORRAMOS EL POST", id);
-    // db.collection('posts').doc(id).delete().then((data) => {
-    //   resolve(data);
-    // }, error => {
-    //   console.log("error", error);
-    //   reject(error);
-    // })
+    swal({
+      title: "¿Estás seguro?",
+      text: "Una vez eliminado el post no se puede recuperar",
+      icon: "warning",
+      buttons: ["Cancelar", "Eliminar"],
+      dangerMode: true,
+    })
+    .then((deleted) => {
+      if (deleted) {
+        db.collection('posts').doc(id).delete().then((data) => {
+          swal("Se elimino correctamente", {
+            icon: "success",
+          });
+        }, error => {
+          console.log("error", error);
+        })
+      }
+    });
+  }
+
+  isHomeFocus() {
+    return false
   }
 
   render() {
@@ -79,19 +103,22 @@ class Profile extends Component {
               <ActivityIndicator size={32} color='red'/>
               : 
               <View style={styles.container}>
-                
-                <View>
-                  <Text>{this.state.user.username}</Text>
-                  <Text>{auth.currentUser.email}</Text>
-                  <Text>Ultimo inicio de sesión: {this.state.lastLogin}</Text>
-                  <Text>Posts: {this.state.posts.length}</Text>
-                  <TouchableOpacity onPress={() => this.props.route.params.logout()}>
-                    <Text>Logout</Text>
-                  </TouchableOpacity>
-                </View>
-                
-                <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item} navigation={this.props.navigation} deletePost={(id) => this.deletePost(id)}/>} />
-              
+                <ScrollView>
+
+                  <View style={styles.profileInfo}>
+                    <Text style={styles.username}>{this.state.user.username}</Text>
+                    <Text>{auth.currentUser.email}</Text>
+                    <Text>Ultimo inicio de sesión: {this.state.lastLogin}</Text>
+                    <Text>Mis posteos: <Text style={styles.postsNum}>{this.state.posts.length}</Text></Text>
+                    <TouchableOpacity onPress={() => this.props.route.params.logout()}>
+                    </TouchableOpacity>
+                  </View>
+                  
+                  <Text style={styles.logout}>Cerrar Sesión</Text>
+                  
+                  <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item}  isHomeFocus={() => this.isHomeFocus()} isProfileFocus={this.props.navigation.isFocused} deletePost={(id) => this.deletePost(id)}/>} />
+
+                </ScrollView>
               </View>
               }
           </>
@@ -100,8 +127,29 @@ class Profile extends Component {
 }
 
 const styles = StyleSheet.create({
-  
-
+  container:{
+    flex:1,
+  },
+  profileInfo: {
+    backgroundColor: 'white',
+    padding: '10px',
+    margin: '10px',
+    borderRadius: '20px',
+  },
+  username: {
+    fontWeight: 'bold',
+  },
+  logout: {
+    backgroundColor: 'white',
+    padding: '10px',
+    margin: '10px',
+    borderRadius: '20px',
+    color: 'red',
+  },
+  postsNum: {
+    fontWeight: 'bold',
+    marginHorizontal: '5px'
+  }
 
 })
 

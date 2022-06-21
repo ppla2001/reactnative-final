@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, StyleSheet } from 'react-native'
+import { View, FlatList, ActivityIndicator, StyleSheet } from 'react-native'
 import React, {Component} from 'react'
 import {db} from '../../firebase/config'
 import Post from '../../components/Post/Post'
@@ -46,6 +46,10 @@ class Home extends Component {
     })
   }
 
+  isProfileFocus() {
+    return false
+  }
+
   render(){
     return (
       <View style={styles.container}>
@@ -53,7 +57,7 @@ class Home extends Component {
          this.state.loading ?
          <ActivityIndicator size={32} color='red'/>
          : 
-         <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item} navigation={this.props.navigation} deletePost={(id) => this.deletePost(id)} /> } />
+         <FlatList data={this.state.posts} keyExtractor={item => item.id.toString()} renderItem={({ item }) => <Post info={item} isHomeFocus={this.props.navigation.isFocused} isProfileFocus={() => this.isProfileFocus()} deletePost={(id) => this.deletePost(id)} /> } />
          }
       </View>
     )
