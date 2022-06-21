@@ -110,9 +110,9 @@ class Post extends Component {
 
                     <DoubleClick doubleTap={() => {this.like()}} delay={200}>
                         <View>
-                            <Image style={styles.postImage} source={{ uri: post.url }} resaizeMode='cover' />
-                            {this.state.showHeart ? <Image style={styles.overlay} source={require('../../../assets/heart.png')} resaizeMode='cover' /> : null}
-                            {this.state.showBrokenHeart ? <Image style={styles.overlay} source={require('../../../assets/brokenheart.png')} resaizeMode='cover' /> : null}
+                            <Image style={styles.postImage} source={{ uri: post.url }} resizeMode='cover' />
+                            {this.state.showHeart ? <Image style={styles.overlay} source={require('../../../assets/heart.png')} resizeMode='cover' /> : null}
+                            {this.state.showBrokenHeart ? <Image style={styles.overlay} source={require('../../../assets/brokenheart.png')} resizeMode='cover' /> : null}
                         </View>
                     </DoubleClick>
                     <View style={styles.postContent}>
