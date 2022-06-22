@@ -11,6 +11,7 @@ import {
   Image,
 } from "react-native";
 import Post from "../../components/Post/Post";
+import Header from "../../components/Header/Header";
 
 class Search extends Component {
   constructor(props) {
@@ -44,13 +45,15 @@ class Search extends Component {
   }
 
   isProfileFocus() {
-    return false
+    return false;
   }
 
   render() {
     // console.log(this.state);
     return (
-      <View>
+      <View style={styles.container}>
+        <Header navigation={this.props.navigation}></Header>
+
         {/* Si no hay resultados deben mostrar un mensaje al usuario. Puede ser un mensaje único o segmenteado: en caso de que el usuario no exista o si el usuario existe indicar que aún no tiene posteos. */}
         <Text>Posts del usuario: {this.state.whoIs}</Text>
         <View style={styles.form}>
@@ -76,7 +79,13 @@ class Search extends Component {
             <FlatList
               data={this.state.posts}
               keyExtractor={(post) => post.id}
-              renderItem={({ item }) => <Post info={item} {...this.props} isProfileFocus={() => this.isProfileFocus()}/>}
+              renderItem={({ item }) => (
+                <Post
+                  info={item}
+                  {...this.props}
+                  isProfileFocus={() => this.isProfileFocus()}
+                />
+              )}
             />
           )
         ) : null}
@@ -88,10 +97,10 @@ class Search extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    // padding: 10,
   },
   form: {
-    flex: 1,
+    // flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     marginHorizontal: 20,

@@ -43,6 +43,13 @@ export default class Register extends Component {
           onChangeText={(text) => this.setState({ password: text })}
         ></TextInput>
         <TouchableOpacity
+          disabled={
+            this.state.email.length === 0 ||
+            this.state.password.length === 0 ||
+            this.state.username.length === 0
+              ? true
+              : false
+          }
           style={styles.btn}
           onPress={() =>
             this.props.register(
@@ -54,6 +61,8 @@ export default class Register extends Component {
         >
           <Text style={styles.btnTxt}> Register </Text>
         </TouchableOpacity>
+        <Text style={styles.txtError}>{this.props.errorMessageRegister}</Text>
+
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate("Login")}
         >
@@ -123,5 +132,12 @@ const styles = StyleSheet.create({
     marginRight: "auto",
     fontSize: 15,
     color: "#00008b",
+  },
+  txtError: {
+    flex: 1,
+    color: "red",
+    padding: 10,
+    marginLeft: "auto",
+    marginRight: "auto",
   },
 });

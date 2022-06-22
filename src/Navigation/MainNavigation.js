@@ -6,7 +6,8 @@ import Register from "../screens/Register/Register";
 import TabNavigation from "./TabNavigation";
 import { auth, db } from "../firebase/config";
 import Comments from "../screens/Comments/Comments";
-import swal from 'sweetalert';
+import Messages from "../screens/Messages/Messages";
+import swal from "sweetalert";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,13 +25,15 @@ export default class MainNavigation extends Component {
     auth.onAuthStateChanged((data) => {
       console.log("ESTA ES LA METADATA DEL USER", auth.currentUser.metadata);
       if (data) {
-        db.collection('users').doc(data.uid).onSnapshot(doc => {
-          console.log("ESTE ES EL USER QUE LLEGA EN SNAPSHOT", doc.data());
-          this.setState({
-            user: doc.data()
-          })
-      })
-        this.setState({ Logged: true,});
+        db.collection("users")
+          .doc(data.uid)
+          .onSnapshot((doc) => {
+            console.log("ESTE ES EL USER QUE LLEGA EN SNAPSHOT", doc.data());
+            this.setState({
+              user: doc.data(),
+            });
+          });
+        this.setState({ Logged: true });
       }
     });
   }
@@ -39,7 +42,7 @@ export default class MainNavigation extends Component {
     auth
       .signInWithEmailAndPassword(email, password)
       .then((response) => {
-        this.setState({ Logged: true })
+        this.setState({ Logged: true });
       })
       .catch((e) => this.setState({ errorMessageLogin: e.message }));
     // Falta avisar al usuario si hay error
@@ -49,14 +52,16 @@ export default class MainNavigation extends Component {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((data) => {
-        db.collection("users").doc(data.user.uid).set({
+        db.collection("users")
+          .doc(data.user.uid)
+          .set({
             owner: email,
             username: username,
             uid: data.user.uid,
             createdAt: Date.now(),
           })
-          .catch((e) => console.error(e))
-        })
+          .catch((e) => console.error(e));
+      })
       .then((response) => this.setState({ Logged: true }))
       .catch((e) => this.setState({ errorMessageRegister: e.message }));
     // Falta avisar al usuario si hay error
@@ -70,10 +75,12 @@ export default class MainNavigation extends Component {
       icon: "warning",
       buttons: ["Cancelar", "Cerrar Sesión"],
       dangerMode: true,
-    })
-    .then((logout) => {
+    }).then((logout) => {
       if (logout) {
-        auth.signOut().then((response) => this.setState({ Logged: false })).catch((e) => console.log(e));
+        auth
+          .signOut()
+          .then((response) => this.setState({ Logged: false }))
+          .catch((e) => console.log(e));
       }
     });
   }
@@ -84,19 +91,20 @@ export default class MainNavigation extends Component {
         <Stack.Navigator>
           {this.state.Logged ? (
             <Stack.Group>
-               <Stack.Screen
-              name="TabNavigation"
-              component={TabNavigation}
-              options={{ headerShown: false }}
-              initialParams={{
-                logout: (email, password) => this.logout(email, password),
-              }}
-            ></Stack.Screen>
-          <Stack.Screen name="Comments" component={Comments}>
-
-          </Stack.Screen>
+              <Stack.Screen
+                name="TabNavigation"
+                component={TabNavigation}
+                options={{ headerShown: false }}
+                initialParams={{
+                  logout: (email, password) => this.logout(email, password),
+                }}
+              ></Stack.Screen>
+              <Stack.Screen name="Comments" component={Comments}></Stack.Screen>
+              <Stack.Screen
+                name="Chat Room"
+                component={Messages}
+              ></Stack.Screen>
             </Stack.Group>
-           
           ) : (
             <Stack.Group>
               <Stack.Screen

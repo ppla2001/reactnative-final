@@ -11,9 +11,11 @@ import CreatePost from "../screens/CreatePost/CreatePost";
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigation(props) {
-  console.log("ESTAS SON LAS PROPS DEL TABNAVIGATOR",props);
+  console.log("ESTAS SON LAS PROPS DEL TABNAVIGATOR", props);
   return (
-    <Tab.Navigator screenOptions={{ tabBarShowLabel: false }}>
+    <Tab.Navigator
+      screenOptions={{ tabBarShowLabel: false, headerShown: false }}
+    >
       <Tab.Screen
         name="Home"
         component={Home}
@@ -25,9 +27,7 @@ export default function TabNavigation(props) {
         name="Create Post"
         component={CreatePost}
         options={{
-          tabBarIcon: () => (
-            <Ionicons name="camera" size={30} color="black" />
-          ),
+          tabBarIcon: () => <Ionicons name="camera" size={30} color="black" />,
         }}
       />
       <Tab.Screen
